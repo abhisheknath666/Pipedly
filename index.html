@@ -1,0 +1,1146 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>Pipedly - Your Content. Brought Together.</title>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/select2.css" rel="stylesheet" type="text/css">
+<link rel="icon" href="img/pipedlyicon.png" type="image/x-icon">
+<!--[if IE]> <link href="css/ie.css" rel="stylesheet" type="text/css"> <![endif]-->
+<style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
+<link href="js/fancybox/jquery.fancybox.css" type="text/css" rel="stylesheet" />
+    <script src="js/jquery-1.7.1.js" type="text/javascript"></script>
+    <script src="js/jquery-ui-1.8.20.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsBezier-0.6.js"></script>        
+    <script src="js/jsPlumb/jsPlumb-util.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-dom-adapter.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-drag.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-endpoint.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-connection.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-anchors.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-defaults.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-connectors-statemachine.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-connectors-flowchart.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-connectors-flowchart.js" type="text/javascript"></script>
+    <script src="js/jsPlumb/jsPlumb-renderers-svg.js"></script>
+    <script src="js/jsPlumb/jsPlumb-renderers-canvas.js"></script>
+    <script src="js/jsPlumb/jsPlumb-renderers-vml.js"></script>
+    <script src="js/jsPlumb/jquery.jsPlumb.js"></script>
+    <script src="js/fancybox/jquery.fancybox.js" type="text/javascript"></script>
+	<script src="js/jquery.hashchange.min.js" type="text/javascript"></script>
+	<script src="js/jquery.easytabs.min.js" type="text/javascript"></script>
+	 <script src="js/select2.js"></script>
+    <script>
+        $(document).ready(function() { $(".e1").select2(); });
+    </script>
+	<script src="js/functions.js" type="text/javascript"></script>
+    <style type="text/css">
+        .hero-unit
+        {
+            height: 500px;
+        }
+        .dragObject
+        {
+            cursor:pointer;
+        }
+        .dragObject img
+        {
+            width:62px;
+            width:58px;
+        }
+         .drag img
+        {
+            width:50px;
+            width:50px;
+        }
+        @media (max-width: 980px)
+        {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right
+            {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+    </style>
+	<script type="text/javascript">
+		$(document).ready( function() {
+		  $('#tab-container').easytabs();
+		});
+	</script>
+    <script>
+        jQuery(function () {
+            jQuery(".drag").draggable({ revert: true, helper: "clone" });
+
+            jQuery(".drop").droppable({
+                accept: ".drag",
+                drop: function (event, ui) {
+                    var clone = jQuery(ui.helper).html();
+                    var cssClass = "";
+                    console.log(jQuery(ui.helper));
+                    if (jQuery(ui.helper).hasClass("input")) {
+                        cssClass = "input";
+                        if (jQuery(ui.helper).hasClass("Evernote")) {
+                            cssClass = cssClass + " Evernote";
+                        }
+                        else if (jQuery(ui.helper).hasClass("Chatter")) {
+                            cssClass = cssClass + " Chatter";
+                        } else if (jQuery(ui.helper).hasClass("SurveyMonkey")) {
+                            cssClass = cssClass + " SurveyMonkey ";
+                        } else if (jQuery(ui.helper).hasClass("zendesk")) {
+                            cssClass = cssClass + " zendesk ";
+                        } 
+						
+                    }
+                    else if (jQuery(ui.helper).hasClass("transform")) {
+                        cssClass = "transform";
+                        if (jQuery(ui.helper).hasClass("GTranslate")) {
+                            cssClass = cssClass + " GTranslate";
+                        }else if (jQuery(ui.helper).hasClass("semantria")) {
+                            cssClass = cssClass + " semantria ";
+                        }
+                    }
+                    else if (jQuery(ui.helper).hasClass("output")) {
+                        cssClass = "output";
+                    }
+                    id = "window" + jQuery(".dragObject").length;
+                    var $div = jQuery("<div  id='" + id + "' class='fancybox " + cssClass + "' />").addClass("dragObject").css({ position: 'absolute', top: (ui.position.top-205), left: ui.position.left-350 });
+                    jQuery(this).append($div.append(clone));
+
+                    jPlm(id);
+                }
+            });
+        });
+        function jPlm(id)
+        {
+            $('#' + id).dblclick(function () {
+					jQuery("#iframe").show();
+					jQuery("#list_en").hide();
+					jQuery("#list_gt").hide();
+					jQuery("#list_ch").hide();
+					jQuery("#list_zd").hide();
+					jQuery("#list_sn").hide();
+                if (jQuery(this).hasClass("Evernote")) {
+                    jQuery("#iframe").attr("src", "en_login.html")
+                }
+                else if (jQuery(this).hasClass("Chatter")) {
+                    jQuery("#iframe").attr("src", "ch_login2.html")
+                }
+                else if (jQuery(this).hasClass("GTranslate")) {
+                    jQuery("#iframe").attr("src", "gt_login3.html")
+                }
+				else if (jQuery(this).hasClass("SurveyMonkey")) {
+                    jQuery("#iframe").attr("src", "mn_login4.html")
+                }
+				else if (jQuery(this).hasClass("zendesk")) {
+                    jQuery("#iframe").attr("src", "zd_login5.html")
+                }
+				else if (jQuery(this).hasClass("semantria")) {
+                    jQuery("#iframe").attr("src", "sn_login6.html")
+                }
+				else {
+                    jQuery("#iframe").attr("src", "login1.html")
+                }
+				
+                $.fancybox({
+                    href: '#inline1'
+                });
+              
+
+            });
+
+            var exampleDropOptions = {
+                tolerance: "touch",
+                hoverClass: "dropHover",
+                activeClass: "dragActive"
+            };
+
+           
+            var color2 = "#316b31";
+            if ($('#' + id).hasClass("transform")) {
+                var Endpoint1 = {
+                    endpoint: ["Dot", { radius: 11 }],
+                    paintStyle: { fillStyle: color2 },
+                    scope: "green dot",
+                    connectorStyle: { strokeStyle: color2, lineWidth: 4 },
+                    connector: ["Bezier", { curviness: 63 }],
+                    maxConnections: -1,
+                    dropOptions: exampleDropOptions,
+                    isTarget: true,
+                    ConnectionOverlays: [
+					["Arrow", { location: 40 }]
+                    ]
+                };
+                var e3 = jsPlumb.addEndpoint(id, { anchor: "LeftMiddle" }, Endpoint1);
+
+                var Endpoint3 = {
+                    endpoint: ["Dot", { radius: 11 }],
+                    paintStyle: { fillStyle: color2 },
+                    isSource: true,
+                    scope: "green dot",
+                    connectorStyle: { strokeStyle: color2, lineWidth: 4 },
+                    connector: ["Bezier", { curviness: 63 }],
+                    maxConnections: 1,
+                    dropOptions: exampleDropOptions,
+                    ConnectionOverlays: [
+					["Arrow", { location: 40 }]
+                    ]
+                };
+                var e2 = jsPlumb.addEndpoint(id, { anchor: "RightMiddle" }, Endpoint3);
+            }
+            else {
+                var Endpoint2 = {
+                    endpoint: ["Dot", { radius: 11 }],
+                    paintStyle: { fillStyle: color2 },
+                    isSource: true,
+                    scope: "green dot",
+                    connectorStyle: { strokeStyle: color2, lineWidth: 4 },
+                    connector: ["Bezier", { curviness: 63 }],
+                    maxConnections: 1,
+                    isTarget: true,
+                    dropOptions: exampleDropOptions,
+                    ConnectionOverlays: [
+					["Arrow", {
+					    location: 1,
+					    id: "arrow",
+					    length: 14,
+					    foldback: 0.8
+					}]
+                    ]
+                };
+                var e1 = jsPlumb.addEndpoint(id, { anchor: "BottomCenter" }, Endpoint2);
+            }
+            jsPlumb.draggable($(".dragObject"));
+        }
+
+        function ListPlumb(id, type) {
+            var exampleDropOptions = {
+                tolerance: "touch",
+                hoverClass: "dropHover",
+                activeClass: "dragActive"
+            };
+           
+            var color2 = "#316b31";
+            if (type == "left") {
+               
+                var Endpoint2 = {
+                    endpoint: ["Rectangle", { radius: 11, width: 10, height: 10}],
+                    paintStyle: { fillStyle: color2 },
+                    isSource: true,
+                    scope: "green dot",
+                    connectorStyle: { strokeStyle: color2, lineWidth: 4 },
+                    connector: ["Bezier", { curviness: 63}],
+                    maxConnections: 1,
+                    isTarget: true,
+                    dropOptions: exampleDropOptions,
+                    ConnectionOverlays: [
+					["Arrow", {
+					    location: 1,
+					    id: "arrow",
+					    length: 14,
+					    foldback: 0.8
+					}]
+                    ]
+                };
+                var e1 = jsPlumb.addEndpoint(id, { anchor: "Right" }, Endpoint2);
+            }
+            else {
+
+                var Endpoint1 = {
+                    endpoint: ["Rectangle", { radius: 11, width: 10, height: 10}],
+                    paintStyle: { fillStyle: color2 },
+                    scope: "green dot",
+                    connectorStyle: { strokeStyle: color2, lineWidth: 4 },
+                    connector: ["Bezier", { curviness: 63}],
+                    maxConnections: -1,
+                    dropOptions: exampleDropOptions,
+                    isTarget: true,
+                    ConnectionOverlays: [
+					["Arrow", { location: 40}]
+                    ]
+                };
+                var e3 = jsPlumb.addEndpoint(id, { anchor: "LeftMiddle" }, Endpoint1);
+            }
+        }
+		
+		$frameList={
+			"en_login.html" : "#list_en",
+			"gt_login3.html": "#list_gt",
+			"ch_login2.html": "#list_ch", 
+			"zd_login5.html": "#list_zd",
+			"sn_login6.html" : "#list_en",
+		}
+		
+        function SetList() {
+            jQuery("#iframe").hide();
+			jQuery( $frameList[jQuery("#iframe").attr("src")]).show();
+			jQuery( $frameList[jQuery("#iframe").attr("src")]+" #leftSide").find("li").each(function () {
+				ListPlumb(jQuery(this).attr("id"), "left");
+			});
+			jQuery($frameList[jQuery("#iframe").attr("src")]+" #rightSide").find("li").each(function () {
+				ListPlumb(jQuery(this).attr("id"), "right");
+			});
+           
+//
+        }
+    </script>
+ <body>
+ <!-- Style switcher -->
+<div class="switcher">
+   <a href="#" title="" class="pat1"><img src="img/switcher/icon-facebook.png" alt=""></a>
+	<a href="#" title="" class="pat2"><img src="img/switcher/icon-googleplus.png" alt=""></a>
+	<a href="#" title="" class="pat3"><img src="img/switcher/icon-linkedin.png" alt=""></a>
+	<a href="#" title="" class="pat4"><img src="img/switcher/icon-twitter.png" alt=""></a>
+	<a href="#" title="" class="pat5"><img src="img/switcher/icon-rss.png" alt=""></a>
+	<a href="#" title="" class="pat6"><img src="img/switcher/icon-tumblr.png" alt=""></a>
+</div>
+<!-- Top line begins -->
+<div id="top">
+    <div class="wrapper">
+        <a href="index.html" title="" class="logo"><img src="img/logo.png" alt=""></a>
+        <!-- Right top nav -->
+        <div class="topNav">
+            <ul class="userNav">
+                <li><a title="" class="search"></a></li>
+                <li><a href="#" title="" class="screen"></a></li>
+                <li><a href="#" title="" class="settings"></a></li>
+                <li><a href="#" title="" class="logout"></a></li>
+                <li class="showTabletP"><a href="#" title="" class="sidebar"></a></li>
+            </ul>
+            <a title="" class="iButton"></a>
+            <a title="" class="iTop"></a>
+            <div class="topSearch">
+                <div class="topDropArrow"></div>
+                <form action="">
+                    <input type="text" placeholder="search..." name="topSearch">
+                    <input type="submit" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Top line ends -->
+<!-- Sidebar begins -->
+<div id="sidebar" class="with">
+    <div class="mainNav">
+        <div class="user">
+            <a title="" class="leftUserDrop"><img src="img/user.png" alt=""><span><strong>3</strong></span></a><span>SomeCompany</span>
+            <ul class="leftUser">
+                <li><a href="#" title="" class="sProfile">My profile</a></li>
+                <li><a href="#" title="" class="sMessages">Messages</a></li>
+                <li><a href="#" title="" class="sSettings">Settings</a></li>
+                <li><a href="#" title="" class="sLogout">Logout</a></li>
+            </ul>
+        </div>
+        <!-- Main nav -->
+        <ul class="nav">
+            <li><a href="index.html" title="" class="active"><img src="img/dashboard.png" alt=""><span>Create</span></a></li>
+            <li><a href="#" title=""><img src="img/ui.png" alt=""><span>Manage</span></a></li>
+            <li><a href="#" title=""><img src="img/forms.png" alt=""><span>Design</span></a></li>
+            <li><a href="#" title=""><img src="img/messages.png" alt=""><span>Chat</span></a></li>
+            <li><a href="#" title=""><img src="img/statistics.png" alt=""><span>Analyze</span></a></li>
+            <li><a href="#" title=""><img src="img/tables.png" alt=""><span>Add</span></a></li>
+            <li><a href="#" title=""><img src="img/other.png" alt=""><span>More</span></a></li>
+        </ul>
+    </div>
+    <!-- Secondary nav -->
+    <div class="secNav">
+        <div class="secWrapper">
+            <div class="secTop">
+                <div class="balance">
+                    <div class="balInfo">Costs:<span>Apr 21 2012</span></div>
+                    <div class="balAmount"><span class="balBars"><canvas width="59" height="18" style="display: inline-block; width: 59px; height: 18px; vertical-align: top;"></canvas></span><span>$58,990</span></div>
+                </div>
+                <a href="#" class="triangle-red"></a>
+            </div>
+            
+            <!-- Tabs container -->
+            <div id="tab-container" class="tab-container">
+                <ul class="iconsLine ic3 etabs">
+                    <li class="clicked"><a href="#general" title="" class="clicked"><span class="icos-fullscreen"></span></a></li>
+                    <li><a href="#alt1" title=""><span class="icos-user"></span></a></li>
+                    <li><a href="#alt2" title=""><span class="icos-archive"></span></a></li>
+                </ul>
+    
+                <div class="divider"><span></span></div>
+                <div class='panel-container'>
+					<div id="general" class="active" style="display: block;">
+                    <!-- Sidebar big buttons -->
+                    <div class="sidePad">
+                        <a href="#" title="" class="sideB bLightBlue">Add new session</a>
+                    </div>
+					<div class="divider"><span></span></div>
+                    <div class="well sidebar-nav">
+					<span class="label">Channels</span>
+											<div class="row-fluid">		
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/Stride.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/DropBox.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input Chatter">
+													<img src="img/Chatter.png">
+													</a>
+												</div>											
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/BaseCamp.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/Box.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/BaseCRM.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input Evernote">
+													<img src="img/Evernote.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/ConstantContact.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input zendesk">
+													<img src="img/ZenDesk.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/Sql_Server.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input">
+													<img src="img/Stripe.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag input SurveyMonkey">
+													<img src="img/MailChimp.png">
+													</a>
+												</div>
+											</div>	<!-- row-fluid-->
+										</div><!-- well sidebar-nav -->
+                    <div class="divider"><span></span></div>
+                    <div class="well sidebar-nav">
+					<span class="label">Transform</span>
+											<div class="row-fluid">
+											
+												<div class="block">
+													<a href="javascript:void(0)" class="drag transform">
+													<img src="img/Filter.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag transform">
+													<img src="img/SQL.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag transform">
+													<img src="img/JavaScript.png">
+													</a>
+												</div>
+												<div class="block">
+												  <a href="javascript:void(0)" class="drag transform GTranslate">
+													<img src="img/GoogleTranslate.png">
+													</a>
+												</div>
+												 <div class="block">
+												  <a href="javascript:void(0)" class="drag transform">
+													<img src="img/Router.png">
+													</a>
+												</div>
+												<div class="block">
+													<a href="javascript:void(0)" class="drag transform semantria">
+														<img src="img/Semantria.png">
+													</a>
+												</div>
+											</div><!-- row-fluid-->
+										</div>
+			</div>
+					<div id="alt1" style="display: none;">
+                    
+                    <!-- Sidebar chart -->
+                    <div class="numStats">
+                        <ul>
+                            <li><a href="#" title="">4248</a><span>visitors</span></li>
+                            <li><a href="#" title="">748</a><span>orders</span></li>
+                            <li class="last"><a href="#" title="">357</a><span>reviews</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="divider"><span></span></div>
+                
+                	<!-- Sidebar user list -->
+                    <ul class="userList">
+                        <li>
+                            <a href="#" title="">
+                                <img src="img/face1.png" alt="">
+                                <span class="contactName">
+                                    <strong>Eugene Kopyov <span>(5)</span></strong>
+                                    <i>web &amp; ui designer</i>
+                                </span>
+                                <span class="status_away"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" title="">
+                                <img src="img/face2.png" alt="">
+                                <span class="contactName">
+                                    <strong>Lucy Wilkinson <span>(12)</span></strong>
+                                    <i>Team leader</i>
+                                </span>
+                                <span class="status_off"></span>
+                            </a>
+                        </li>
+                        <li class="noBorderB">
+                            <a href="#" title="">
+                                <img src="img/face3.png" alt="">
+                                <span class="contactName">
+                                    <strong>John Dow</strong>
+                                    <i>PHP developer</i>
+                                </span>
+                                <span class="status_available"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="divider"><span></span></div>
+			</div>
+					<div id="alt2" style="display: none;">
+                
+                	<!-- Sidebar forms -->
+                    <div class="sideWidget">
+                        <div class="formRow">
+                            <label>Usual input field:</label>
+                            <input type="text" name="regular" placeholder="Your name">
+                        </div>
+                        <div class="formRow">
+                           <label>Usual password field:</label>
+                            <input type="password" name="regular" placeholder="Your password"> 
+                        </div>
+                        <div class="formRow">
+                            <label>Usual textarea:</label>
+                            <textarea rows="8" cols="" name="textarea" placeholder="Your message"></textarea>
+                        </div>
+                        <div class="formRow noBorderB">
+                            <input type="submit" class="buttonS bLightBlue" value="Submit button">
+                        </div>
+                    </div>
+            </div>
+				</div>
+			</div>
+            
+    </div> 
+  </div>
+</div>
+<!-- Sidebar ends -->
+<!-- Content begins -->
+<div id="content" class="">
+    <div class="contentTop">
+        <span class="pageTitle"><span class="icon-screen"></span>Dashboard</span>
+        <ul class="quickStats">
+            <li>
+                <a href="" class="blueImg"><img src="img/plus.png" alt=""></a>
+                <div class="floatR"><strong class="blue">5489</strong><span>tasks</span></div>
+            </li>
+            <li>
+                <a href="" class="redImg"><img src="img/user1.png" alt=""></a>
+                <div class="floatR"><strong class="blue">4658</strong><span>calls</span></div>
+            </li>
+            <li>
+                <a href="" class="greenImg"><img src="img/money.png" alt=""></a>
+                <div class="floatR"><strong class="blue">1289</strong><span>transactions</span></div>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Breadcrumbs line -->
+    <div class="breadLine">
+        <div class="bc">
+            <ul id="breadcrumbs" class="breadcrumbs">
+                <li><a href="#">Dashboard</a></li>
+                <li class="current"><a href="ui_grid.html" title="">Grid</a></li>
+            </ul>
+        </div>
+        
+        <div class="breadLinks">
+            <ul>
+                <li><a href="#" title=""><i class="icos-list"></i><span>Actions</span> <strong>(+58)</strong></a></li>
+                <li><a href="#" title=""><i class="icos-check"></i><span>Tasks</span> <strong>(+12)</strong></a></li>
+                <li class="has">
+                    <a title="">
+                        <i class="icos-money3"></i>
+                        <span>Invoices</span>
+                        <span><img src="img/hasddArrow.png" alt=""></span>
+                    </a>
+                    <ul>
+                        <li><a href="#" title=""><span class="icos-add"></span>New invoice</a></li>
+                        <li><a href="#" title=""><span class="icos-archive"></span>History</a></li>
+                        <li class="noBorderB"><a href="#" title=""><span class="icos-printer"></span>Print invoices</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="musicButtons">
+				    <ul>
+						<li><a href="#" title=""><img src="img/but/play2.png" alt=""></a></li>
+						<li><a href="#" title=""><img src="img/but/stop2.png" alt=""></a></li>
+						<li><a href="#" title=""><img src="img/but/pause2.png" alt=""></a></li>
+						<li><a href="#" title=""><img src="img/but/prev2.png" alt=""></a></li>
+						<li><a href="#" title=""><img src="img/but/next2.png" alt=""></a></li>
+						<img src="images/elements/loaders/10.gif" alt="" class="loader">
+					</ul>
+				</div>
+    <!-- Main content -->
+    <div class="wrapper">
+    	<!-- Chart -->
+        <div class="widget chartWrapper">
+            <div class="whead"><h6>Workflow</h6>
+                <div class="titleOpt">
+                    <a href="#"><span class="icos-cog3"></span></a>
+                </div>
+            </div>
+            <div class="body">
+				<div class=" hero-unit drop">
+				</div>
+			</div>
+		</div>
+    </div>
+    <!-- Main content ends -->
+	<div id="inline1" style="width:700px;display: none;height:324px;">
+        <iframe frameborder="0" scrolling="no" width="700" height="324" id="iframe"></iframe>
+			<div class="container" style="width:700px;">
+				<div class="row" style="display:none;" id="list_en">
+					<div class="box semantria multi">
+						<div class="box_header">
+							<img src="images/sema.png" alt="">
+						</div>
+						<div class="box_options">
+						</div>
+						<div class = "box_body">
+							<select multiple="multiple" class="multiple" title="Click to Select a City">
+                                <option>Amsterdam</option>      
+                                <option>Atlanta</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Buenos Aires</option>
+                                <option>Calgary</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Dubai</option>
+                                <option>Frankfurt</option>
+                                <option>Hong Kong</option>
+                                <option>Honolulu</option>
+                                <option>Houston</option>
+                                <option>Kuala Lumpur</option>
+                                <option>London</option>
+                                <option>Los Angeles</option>
+                                <option>Melbourne</option>
+                                <option>Mexico City</option>
+                                <option>Miami</option>
+                                <option>Minneapolis</option>
+                                <option>Montreal</option>
+                                <option>New York City</option>
+                                <option>Paris</option>
+                                <option>Philadelphia</option>
+                                <option>Rotterdam</option>
+                                <option>San Diego</option>
+                                <option>San Francisco</option>
+                                <option>Sao Paulo</option>
+                                <option>Seattle</option>
+                                <option>Seoul</option>
+                                <option>Shanghai</option>
+                                <option>Singapore</option>
+                                <option>Sydney</option>
+                                <option>Tokyo</option>
+                                <option>Toronto</option>
+                                <option>Vancouver</option>
+                            </select>
+							<!-- <ul class="clearfix" id="leftSide" style="list-style-type:none;">
+								<li id="li1"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="li2"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li3"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="li4"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li5"><i class="icon-chevron-right"></i>Time Created</li>
+								<li id="li6"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li7"><i class="icon-chevron-right"></i>Title</li>
+								<li id="li8"><i class="icon-chevron-right"></i>URL</li>
+								<li id="li9"><i class="icon-chevron-right"></i>Tags</li>
+								<li id="li10"><i class="icon-chevron-right"></i>Attributes sourse URL</li>
+								<li id="li11"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li12"><i class="icon-chevron-right"></i>Time Updated</li>
+							</ul> -->
+						</div>
+					</div>
+					<div class="box evernote">
+						<div class="box_header">
+							<img src="images/evernote.png"  alt=""/>
+						</div>
+						<div class="box_options">
+							<label>Notebook:</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+						</div>
+						<div class = "box_body">
+							<select multiple="multiple" class="multiple" title="Click to Select">
+                                <option>Source Text String</option> 
+							</select>
+							<!--<ul class="clearfix" id="rightSide" style="list-style-type:none;">
+								<li  id="liRight1"><i class="icon-chevron-right"></i>Source Text String</li>
+							</ul> -->
+						</div>
+					</div>
+				</div><!-- list_en-->
+				<div class="row" style="display:none;" id="list_gt">
+					<div class="box google multi">
+						<div class="box_header">
+							<img src="images/Google.png" alt="">
+						</div>
+						<div class="box_options">
+							
+						</div>
+						<div class = "box_body">
+							<select multiple="multiple" class="multiple" title="Click to Select a City">
+                                <option>Amsterdam</option>      
+                                <option>Atlanta</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Buenos Aires</option>
+                                <option>Calgary</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Dubai</option>
+                                <option>Frankfurt</option>
+                                <option>Hong Kong</option>
+                                <option>Honolulu</option>
+                                <option>Houston</option>
+                                <option>Kuala Lumpur</option>
+                                <option>London</option>
+                                <option>Los Angeles</option>
+                                <option>Melbourne</option>
+                                <option>Mexico City</option>
+                                <option>Miami</option>
+                                <option>Minneapolis</option>
+                                <option>Montreal</option>
+                                <option>New York City</option>
+                                <option>Paris</option>
+                                <option>Philadelphia</option>
+                                <option>Rotterdam</option>
+                                <option>San Diego</option>
+                                <option>San Francisco</option>
+                                <option>Sao Paulo</option>
+                                <option>Seattle</option>
+                                <option>Seoul</option>
+                                <option>Shanghai</option>
+                                <option>Singapore</option>
+                                <option>Sydney</option>
+                                <option>Tokyo</option>
+                                <option>Toronto</option>
+                                <option>Vancouver</option>
+                            </select>
+							<!--<ul class="clearfix" id="leftSide" style="list-style-type:none;">
+								<li id="li13"><i class="icon-chevron-right"></i>Source Text String</li>
+								<li id="li14"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li15"><i class="icon-chevron-right"></i>Time Created</li>
+								<li id="li16"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li17"><i class="icon-chevron-right"></i>Title</li>
+								<li id="li18"><i class="icon-chevron-right"></i>URL</li>
+								<li id="li19"><i class="icon-chevron-right"></i>Tags</li>
+								<li id="li20"><i class="icon-chevron-right"></i>Attributes sourse URL</li>
+								<li id="li21"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li22"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li23"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li24"><i class="icon-chevron-right"></i>Time Updated</li>
+							</ul> -->
+						</div>
+					</div>
+					<div class="box semantria multi">
+						<div class="box_header">
+							<img src="images/sema.png"  alt=""/>
+						</div>
+						<div class="box_options">
+							<label>Configuration ID</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+						</div>
+						<div class = "box_body">
+							<select multiple="multiple" class="multiple" title="Click to Select a City">
+                                <option>Amsterdam</option>      
+                                <option>Atlanta</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Buenos Aires</option>
+                                <option>Calgary</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Dubai</option>
+                                <option>Frankfurt</option>
+                                <option>Hong Kong</option>
+                                <option>Honolulu</option>
+                                <option>Houston</option>
+                                <option>Kuala Lumpur</option>
+                                <option>London</option>
+                                <option>Los Angeles</option>
+                                <option>Melbourne</option>
+                                <option>Mexico City</option>
+                                <option>Miami</option>
+                                <option>Minneapolis</option>
+                                <option>Montreal</option>
+                                <option>New York City</option>
+                                <option>Paris</option>
+                                <option>Philadelphia</option>
+                                <option>Rotterdam</option>
+                                <option>San Diego</option>
+                                <option>San Francisco</option>
+                                <option>Sao Paulo</option>
+                                <option>Seattle</option>
+                                <option>Seoul</option>
+                                <option>Shanghai</option>
+                                <option>Singapore</option>
+                                <option>Sydney</option>
+                                <option>Tokyo</option>
+                                <option>Toronto</option>
+                                <option>Vancouver</option>
+                            </select>
+							<!--<ul class="clearfix" id="rightSide" style="list-style-type:none;">
+								<li  id="liRight2"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li  id="liRight3"><i class="icon-chevron-right"></i>Source Text String</li>
+								<li id="liRight5"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="liRight6"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="liRight7"><i class="icon-chevron-right"></i>Time Created</li>
+								<li id="liRight8"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="liRight9"><i class="icon-chevron-right"></i>Title</li>
+								<li id="liRight10"><i class="icon-chevron-right"></i>URL</li>
+								<li id="liRight11"><i class="icon-chevron-right"></i>Tags</li>
+								<li id="liRight12"><i class="icon-chevron-right"></i>Attributes sourse URL</li>
+								<li id="liRight13"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="liRight14"><i class="icon-chevron-right"></i>Time Updated</li>
+								
+							</ul>-->
+						</div>
+					</div>
+				</div> <!--list_gt-->
+				<div class="row" style="display:none;" id="list_ch">
+					<div class="box chat multi">
+						<div class="box_header">
+							<img src="images/chat.png" alt="">
+						</div>
+						<div class="box_options">
+							<label>Group:</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+						</div>
+						<div class = "box_body">
+						<select multiple="multiple" class="multiple" title="Click to Select a City">
+                                <option>Amsterdam</option>      
+                                <option>Atlanta</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Buenos Aires</option>
+                                <option>Calgary</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Dubai</option>
+                                <option>Frankfurt</option>
+                                <option>Hong Kong</option>
+                                <option>Honolulu</option>
+                                <option>Houston</option>
+                                <option>Kuala Lumpur</option>
+                                <option>London</option>
+                                <option>Los Angeles</option>
+                                <option>Melbourne</option>
+                                <option>Mexico City</option>
+                                <option>Miami</option>
+                                <option>Minneapolis</option>
+                                <option>Montreal</option>
+                                <option>New York City</option>
+                                <option>Paris</option>
+                                <option>Philadelphia</option>
+                                <option>Rotterdam</option>
+                                <option>San Diego</option>
+                                <option>San Francisco</option>
+                                <option>Sao Paulo</option>
+                                <option>Seattle</option>
+                                <option>Seoul</option>
+                                <option>Shanghai</option>
+                                <option>Singapore</option>
+                                <option>Sydney</option>
+                                <option>Tokyo</option>
+                                <option>Toronto</option>
+                                <option>Vancouver</option>
+                            </select>
+							<!--<ul class="clearfix" id="leftSide" style="list-style-type:none;">
+								<li id="li25"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li26"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="li27"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li28"><i class="icon-chevron-right"></i>Time Created</li>
+								<li id="li29"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li30"><i class="icon-chevron-right"></i>Title</li>
+								<li id="li31"><i class="icon-chevron-right"></i>URL</li>
+								<li id="li32"><i class="icon-chevron-right"></i>Tags</li>
+								<li id="li33"><i class="icon-chevron-right"></i>Attributes sourse URL</li>
+								<li id="li34"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li35"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li36"><i class="icon-chevron-right"></i>Time Updated</li>
+							</ul> -->
+						</div>
+					</div>
+					<div class="box google multi">
+						<div class="box_header">
+							<img src="images/Google.png"  alt=""/>
+						</div>
+						<div class="box_options">
+							<label>Select language</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+							<label>Target language</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+						</div>
+						<div class = "box_body">
+						<select multiple="multiple" class="multiple" title="Click to Select a City">
+                                <option>Amsterdam</option>      
+                                <option>Atlanta</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Buenos Aires</option>
+                                <option>Calgary</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Dubai</option>
+                                <option>Frankfurt</option>
+                                <option>Hong Kong</option>
+                                <option>Honolulu</option>
+                                <option>Houston</option>
+                                <option>Kuala Lumpur</option>
+                                <option>London</option>
+                                <option>Los Angeles</option>
+                                <option>Melbourne</option>
+                                <option>Mexico City</option>
+                                <option>Miami</option>
+                                <option>Minneapolis</option>
+                                <option>Montreal</option>
+                                <option>New York City</option>
+                                <option>Paris</option>
+                                <option>Philadelphia</option>
+                                <option>Rotterdam</option>
+                                <option>San Diego</option>
+                                <option>San Francisco</option>
+                                <option>Sao Paulo</option>
+                                <option>Seattle</option>
+                                <option>Seoul</option>
+                                <option>Shanghai</option>
+                                <option>Singapore</option>
+                                <option>Sydney</option>
+                                <option>Tokyo</option>
+                                <option>Toronto</option>
+                                <option>Vancouver</option>
+                            </select>
+							<!--<ul class="clearfix" id="rightSide" style="list-style-type:none;">
+								<li id="liRight15"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="liRight16"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="liRight17"><i class="icon-chevron-right"></i>Time Created</li>
+								<li id="liRight18"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="liRight19"><i class="icon-chevron-right"></i>Title</li>
+								<li id="liRight20"><i class="icon-chevron-right"></i>URL</li>
+								<li id="liRight21"><i class="icon-chevron-right"></i>Tags</li>
+								<li id="liRight22"><i class="icon-chevron-right"></i>Attributes sourse URL</li>
+								<li id="liRight23"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="liRight24"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="liRight25"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="liRight26"><i class="icon-chevron-right"></i>Time Updated</li>
+							</ul>-->
+						</div>
+					</div>
+				</div> <!--list_ch-->
+				<div class="row" style="display:none;" id="list_zd">
+					<div class="box zend multi">
+						<div class="box_header">
+							<img src="images/zendesk.png" alt="">
+						</div>
+						<div class="box_options">
+							<label>View:</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+						</div>
+						<div class = "box_body">
+						<select multiple="multiple" class="multiple" title="Click to Select a City">
+                                <option>Amsterdam</option>      
+                                <option>Atlanta</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Buenos Aires</option>
+                                <option>Calgary</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Dubai</option>
+                                <option>Frankfurt</option>
+                                <option>Hong Kong</option>
+                                <option>Honolulu</option>
+                                <option>Houston</option>
+                                <option>Kuala Lumpur</option>
+                                <option>London</option>
+                                <option>Los Angeles</option>
+                                <option>Melbourne</option>
+                                <option>Mexico City</option>
+                                <option>Miami</option>
+                                <option>Minneapolis</option>
+                                <option>Montreal</option>
+                                <option>New York City</option>
+                                <option>Paris</option>
+                                <option>Philadelphia</option>
+                                <option>Rotterdam</option>
+                                <option>San Diego</option>
+                                <option>San Francisco</option>
+                                <option>Sao Paulo</option>
+                                <option>Seattle</option>
+                                <option>Seoul</option>
+                                <option>Shanghai</option>
+                                <option>Singapore</option>
+                                <option>Sydney</option>
+                                <option>Tokyo</option>
+                                <option>Toronto</option>
+                                <option>Vancouver</option>
+                            </select>
+							<!--<ul class="clearfix" id="leftSide" style="list-style-type:none;">
+								<li id="li37"><i class="icon-chevron-right"></i>Time Created</li>
+								<li id="li38"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li39"><i class="icon-chevron-right"></i>Title</li>
+								<li id="li40"><i class="icon-chevron-right"></i>URL</li>
+								<li id="li41"><i class="icon-chevron-right"></i>Tags</li>
+								<li id="li42"><i class="icon-chevron-right"></i>Attributes sourse URL</li>
+								<li id="li43"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="li44"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="li45"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="li46"><i class="icon-chevron-right"></i>Title</li>
+								<li id="li47"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="li48"><i class="icon-chevron-right"></i>Content text</li>
+							</ul>-->
+						</div>
+					</div>
+					<div class="box google multi">
+						<div class="box_header">
+							<img src="images/Google.png"  alt=""/>
+						</div>
+						<div class="box_options">
+							<label>Select language</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+							<label>Target language</label>
+							<div class="selector">
+								<select class="e1">
+									<option value="AL">Alabama</option>
+									<option value="WY">Wyoming</option>
+								</select>
+							</div>
+						</div>
+						<div class = "box_body">
+						<select multiple="multiple" class="multiple" title="Click to Select a City">
+                                <option>Amsterdam</option>      
+                                <option>Atlanta</option>
+                                <option>Baltimore</option>
+                                <option>Boston</option>
+                                <option>Buenos Aires</option>
+                                <option>Calgary</option>
+                                <option>Chicago</option>
+                                <option>Denver</option>
+                                <option>Dubai</option>
+                                <option>Frankfurt</option>
+                                <option>Hong Kong</option>
+                                <option>Honolulu</option>
+                                <option>Houston</option>
+                                <option>Kuala Lumpur</option>
+                                <option>London</option>
+                                <option>Los Angeles</option>
+                                <option>Melbourne</option>
+                                <option>Mexico City</option>
+                                <option>Miami</option>
+                                <option>Minneapolis</option>
+                                <option>Montreal</option>
+                                <option>New York City</option>
+                                <option>Paris</option>
+                                <option>Philadelphia</option>
+                                <option>Rotterdam</option>
+                                <option>San Diego</option>
+                                <option>San Francisco</option>
+                                <option>Sao Paulo</option>
+                                <option>Seattle</option>
+                                <option>Seoul</option>
+                                <option>Shanghai</option>
+                                <option>Singapore</option>
+                                <option>Sydney</option>
+                                <option>Tokyo</option>
+                                <option>Toronto</option>
+                                <option>Vancouver</option>
+                            </select>
+							<!--<ul class="clearfix" id="rightSide" style="list-style-type:none;">
+								<li id="liRight27"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="liRight28"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="liRight29"><i class="icon-chevron-right"></i>Time Created</li>
+								<li id="liRight30"><i class="icon-chevron-right"></i>Title</li>
+								<li id="liRight31"><i class="icon-chevron-right"></i>Tags</li>
+								<li id="liRight32"><i class="icon-chevron-right"></i>Attributes sourse URL</li>
+								<li id="liRight33"><i class="icon-chevron-right"></i>NotebookId</li>
+								<li id="liRight34"><i class="icon-chevron-right"></i>Time Updated</li>
+								<li id="liRight35"><i class="icon-chevron-right"></i>Content text</li>
+								<li id="liRight36"><i class="icon-chevron-right"></i>Title</li>
+								<li id="liRight37"><i class="icon-chevron-right"></i>URL</li>
+								<li id="liRight38"><i class="icon-chevron-right"></i>Time Updated</li>
+							</ul> -->
+						</div>
+					</div>
+				</div> <!--list_ch-->
+			</div>
+	</div>
+</div>
+<!-- Content ends -->
+
+
+
+</body></html>

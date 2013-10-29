@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<title>mn_login1</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link href="css/login1.css" rel="stylesheet" type="text/css">
+	</head>
+	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">			
+			<div class="widget">
+                <div class="whead"><img src= "images/mn_login1.png" alt =""></div>
+                <form id="wizard1" method="post" action="submit.html" class="main ui-formwizard">
+                    <fieldset class="step ui-formwizard-content" id="w1first" style="display: block;">
+                        <div class="formRow">
+                            <div class="grid3"><label>Username:</label></div>
+                            <div class="grid9"><input type="text" name="username" id="username" class="ui-wizard-content"></div>
+                        </div>
+                        <div class="formRow">
+                            <div class="grid3"><label>Password:</label></div>
+                            <div class="grid9"><input type="password" name="pw" id="pw" class="ui-wizard-content"></div>
+                        </div>
+                        <div class="formRow noBorderB">
+                            <div class="grid3"><label>Email:</label></div>
+                            <div class="grid9"><input type="text" name="mail" id="mail" class="ui-wizard-content"></div>
+                        </div>
+                    </fieldset>
+                    <div class="formRow noBorderB">
+                        <div class="status" id="status1"></div>
+                        <div class="formSubmit">
+                            <a  href="javascript:void(0)"  onclick="window.parent.SetList()">
+								<img src="images/en_login_15.png" width="101" height="31" alt="">
+							</a>
+                        </div>
+                    </div>
+                </form>
+                <div class="data" id="w1"></div>
+            </div>
+	</body>
+</html>
